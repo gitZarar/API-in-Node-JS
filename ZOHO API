@@ -1,0 +1,88 @@
+File Name: App.JS
+
+I have installed Supreagent Library for API
+
+var express = require('express');
+var app = express();
+var path = require('path');
+var bodyParser = require('body-parser');
+const superagent = require('superagent');
+
+
+/*Start From Here & API Route Name Is callapi*/
+
+    app.get('/callapi',(req,res)=>{
+    superagent.get('https://books.zoho.com/api/v3/organizations')
+    .query({organization_id: '649249007', authtoken: 'db36e02a50b57e081efe533a8a0f834b' })
+    .end((err, data) => {
+    if (err) { return console.log(err); }
+    var fnldata=JSON.parse(data.text);
+    let result = fnldata.organizations.map(api=>{
+      return {
+                      
+          'name' : api.name,
+          'contact_name' : api.contact_name,
+          'email' : api.email,
+          'country' : api.country,
+          'country_code' : api.country_code,
+            }
+        });
+     res.json({data: result});
+  });
+})
+/*End here*/
+
+/*Now here i'am using Zero Data Table Configuration
+Here Is HTML*/
+
+
+ <table id="api" class="display" style="width:100%">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Contact Name</th>
+                  <th>Email</th>
+                  <th>Country</th>
+                  <th>Country Code</th>
+              </tr>
+          </thead>
+ </table>
+
+/* Next Step is: I have used Ajax Call to Route i,e callapi*/
+
+<script type="text/javascript">
+  
+$(document).ready(function(){
+
+ $('#api').DataTable( {
+           stateSave: true,
+          "bDestroy": true,
+
+         "responsive": true,
+          searchHighlight: true,
+
+          "ajax": {
+            "url": 'http://localhost:3000/callapi',
+          "type" : "GET"
+        },
+
+        "aaSorting": [ 0, "desc" ],
+
+          "columns" : [
+                {"data" : "name"},
+                {"data" : "contact_name"},
+                {"data" : "email"},
+                {"data" : "country"},
+                {"data":"country_code"}
+         
+
+              ]
+
+          } );
+ });
+
+</script>
+
+
+
+
