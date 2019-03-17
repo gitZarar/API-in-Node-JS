@@ -81,6 +81,7 @@ $(document).ready(function(){
           } );
  });
 
+Now it Showing the data in data table using API
 </script>
 
 
